@@ -1,0 +1,29 @@
+name: Deploy Fipe
+
+on:
+  push:
+    branches:
+      - master
+  create:
+    tags:
+      - v*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build app
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - run:  npm i
+      - run:  npm run build
+
+      - uses: akhileshns/heroku-deploy@v3.10.9
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "cgi-fipe-mvb"
+          heroku_email: "mauriciobrocco@gmail.com"
+          usedocker: true
